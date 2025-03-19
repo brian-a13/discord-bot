@@ -23,8 +23,9 @@ def generate_tts_audio(username):
     return filename
 
 @bot.event
-async def on_ready(): #When bot is ready, this will display
+async def on_ready():
     print(f"{bot.user.name} is ready for work!")
+
 
 @bot.event
 async def on_voice_state_update(member, before, after):
@@ -36,19 +37,17 @@ async def on_voice_state_update(member, before, after):
         if bot.user in after.channel.members:
             print("Bot is already in the voice channel.")
         else:
-            #Bot connects to VC here
+            #Bot connects to VC
             vc = await after.channel.connect()
-
-            #Play TTS audio
-            filename = generate_tts_audio(member.name)
-
-             #Use FFmpeg to play audio
-            audio_source = discord.FFmpegPCMAudio(filename)
+            
+            generated_name_audio = generate_tts_audio(member.name)
+            #add the path to the ffmpeg bin file to the user variables for the systems PATH 
+            audio_source = FFmpegPCMAudio(generated_name_audio)
             vc.play(audio_source, after=lambda e: print("Done playing"))
 
 
-            while vc.is_playing():  #After playing TTS, Bot will disconnect
+            while vc.is_playing():  #After playing audio, Bot will disconnect from thr VC
                 await asyncio.sleep(1)
             await vc.disconnect()
 
-bot.run(bot_token) #Bot token here
+bot.run(bot_token)
