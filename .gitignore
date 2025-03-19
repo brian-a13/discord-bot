@@ -174,4 +174,4 @@ cython_debug/
 .pypirc
 
 #random
-.mp3
+*.mp3
